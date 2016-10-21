@@ -13,7 +13,7 @@
 #include "MovingEntity.h"
 #include "2d/Vector2D.h"
 #include "misc/Smoother.h"
-#include "Vehicule.h"
+#include "Vehicle.h"
 
 #include <vector>
 #include <list>
@@ -21,15 +21,29 @@
 
 class GameWorld;
 class SteeringBehavior;
-class Vehicule;
+class Vehicle;
 
 
-
-class Follower : public Vehicule
+class Follower : public Vehicle
 {
+private:
+	Vehicle* following;
 
-}
+public:
 
+	Follower(GameWorld* world,
+		Vector2D position,
+		double    rotation,
+		Vector2D velocity,
+		double    mass,
+		double    max_force,
+		double    max_speed,
+		double    max_turn_rate,
+		double    scale,
+		Vehicle*	following);
+
+	~Follower();
+};
 
 
 #endif
