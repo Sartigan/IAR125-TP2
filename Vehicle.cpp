@@ -21,7 +21,8 @@ Vehicle::Vehicle(GameWorld* world,
                double    max_force,
                double    max_speed,
                double    max_turn_rate,
-               double    scale):    MovingEntity(position,
+               double    scale,
+			   int color):    MovingEntity(position,
                                                  scale,
                                                  velocity,
                                                  max_speed,
@@ -44,7 +45,7 @@ Vehicle::Vehicle(GameWorld* world,
   //set up the smoother
   m_pHeadingSmoother = new Smoother<Vector2D>(Prm.NumSamplesForSmoothing, Vector2D(0.0, 0.0)); 
   
- 
+  this->color = color;
 }
 
 
@@ -161,6 +162,18 @@ void Vehicle::Render()
                                          Side(),
                                          Scale());
   }
+
+  //Determiner la couleur du render
+  switch (getColor())
+  {
+  case 0: gdi->BluePen();
+	  break;
+  case 1: gdi->RedPen();
+	  break;
+  case 2: gdi->GreenPen();
+	  break;
+  }
+
 
 
   gdi->ClosedShape(m_vecVehicleVBTrans);

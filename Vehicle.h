@@ -63,6 +63,9 @@ private:
   Vehicle(const Vehicle&);
   Vehicle& operator=(const Vehicle&);
 
+  //Couleur du vehicule
+  int color;
+
 
 public:
 
@@ -74,7 +77,8 @@ public:
          double    max_force,
          double    max_speed,
          double    max_turn_rate,
-         double    scale);
+         double    scale,
+		 int color);
 
   ~Vehicle();
 
@@ -95,6 +99,7 @@ public:
   void        SmoothingOn(){m_bSmoothingOn = true;}
   void        SmoothingOff(){m_bSmoothingOn = false;}
   void        ToggleSmoothing(){m_bSmoothingOn = !m_bSmoothingOn;}
+  int		  getColor() { return color; }
   
   double       TimeElapsed()const{return m_dTimeElapsed;}
  

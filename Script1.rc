@@ -40,7 +40,7 @@ BEGIN
     END
     POPUP "Calculate Method"
     BEGIN
-        MENUITEM "Weighted Sum",                IDR_WEIGHTED_SUM
+        MENUITEM "Weighted Sum(Line)",                IDR_WEIGHTED_SUM
         MENUITEM "Prioritized",                 IDR_PRIORITIZED
         MENUITEM "Dithered",                    IDR_DITHERED
     END

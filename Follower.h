@@ -40,7 +40,8 @@ public:
 		double    max_speed,
 		double    max_turn_rate,
 		double    scale,
-		Vehicle*	following);
+		int		  color,
+		Vehicle*  following);
 
 	~Follower();
 };
