@@ -130,6 +130,7 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 
         //handle any others
         g_GameWorld->HandleKeyPresses(wParam);
+		
         
       }//end WM_KEYUP
 

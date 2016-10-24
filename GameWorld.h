@@ -21,6 +21,7 @@
 #include "BaseGameEntity.h"
 #include "EntityFunctionTemplates.h"
 #include "vehicle.h"
+#include "Player.h"
 
 
 class Obstacle;
@@ -37,6 +38,8 @@ private:
 
   //a container of all the moving entities
   std::vector<Vehicle*>         m_Vehicles;
+
+  Player*						m_player;
 
   //any obstacles
   std::vector<BaseGameEntity*>  m_Obstacles;

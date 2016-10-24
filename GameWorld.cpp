@@ -1,6 +1,7 @@
 #include "GameWorld.h"
 #include "Follower.h"
 #include "Leader.h"
+#include "Player.h"
 #include "Vehicle.h"
 #include "constants.h"
 #include "Obstacle.h"
@@ -50,7 +51,7 @@ GameWorld::GameWorld(int cx, int cy):
 	double border = 30;
 	m_pPath = new Path(5, border, border, cx-border, cy-border, true); 
 
-	Leader* pPlayer;
+	Player* pPlayer;
 	Leader* pLeader;
 	Vehicle* newLeader;
 	Vehicle* pFollower;
@@ -63,7 +64,7 @@ GameWorld::GameWorld(int cx, int cy):
 	Vector2D SpawnPos = Vector2D(cx / 2.0 + RandomClamped()*cx / 2.0,
 		cy / 2.0 + RandomClamped()*cy / 2.0);
 
-	pPlayer = new Leader(this,
+	m_player = new Player(this,
 		SpawnPos,                 //initial position
 		RandFloat()*TwoPi,        //start rotation
 		Vector2D(0, 0),            //velocity
@@ -75,9 +76,9 @@ GameWorld::GameWorld(int cx, int cy):
 		2);							//color  (Le player est vert)
 
 	//add it to the cell subdivision
-	m_pCellSpace->AddEntity(pPlayer);
+	m_pCellSpace->AddEntity(m_player);
 
-	m_Vehicles.push_back(pPlayer);
+	m_Vehicles.push_back(m_player);
 
 
 //CREATION DU/DES LEADER(S) (WANDER)
@@ -293,7 +294,9 @@ void GameWorld::SetCrosshair(POINTS p)
 //------------------------- HandleKeyPresses -----------------------------
 void GameWorld::HandleKeyPresses(WPARAM wParam)
 {
-
+	if (m_player) {
+		m_player->HandleKeyPresses(wParam);
+	}
   switch(wParam)
   {
   case 'U':
