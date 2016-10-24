@@ -10,15 +10,15 @@ Player::Player	(GameWorld* world, Vector2D position,	double rotation, Vector2D v
 
 void Player::HandleKeyPresses(WPARAM wParam)
 {
-	if (wParam == 'Z') {
+	if (wParam == VK_UP) {
 		Vector2D v = m_vVelocity;
 		Vector2D newv = VectorToWorldSpace(Vector2D(MaxSpeed() / 5, 0), m_vHeading, m_vSide);
 		SetVelocity(Vector2D(v.x + newv.x, v.y + newv.y));
 	}
-	if (wParam == 'Q') {
+	if (wParam == VK_LEFT) {
 		RotateHeadingToFacePosition(PointToWorldSpace(Vector2D(1, -0.2), Heading(), Side(), Pos()));
 	}
-	if (wParam == 'S') {
+	if (wParam == VK_DOWN) {
 		Vector2D v = m_vVelocity;
 		if (v.Length() > 0) {
 			double slow = MaxSpeed() / 5;
@@ -29,7 +29,7 @@ void Player::HandleKeyPresses(WPARAM wParam)
 			SetVelocity(Vector2D(v.x + newv.x, v.y + newv.y));
 		}
 	}
-	if (wParam == 'D') {
+	if (wParam == VK_RIGHT) {
 		RotateHeadingToFacePosition(PointToWorldSpace(Vector2D(1, 0.2), Heading(), Side(), Pos()));
 	}
 }

@@ -51,34 +51,74 @@ GameWorld::GameWorld(int cx, int cy):
 	double border = 30;
 	m_pPath = new Path(5, border, border, cx-border, cy-border, true); 
 
-	Player* pPlayer;
 	Leader* pLeader;
 	Vehicle* newLeader;
 	Vehicle* pFollower;
+	Vector2D SpawnPos;
 
-	// Chaques Leaders vont avoir le nombre d'agents diviser par le nombre de leader (pas de chicane)
-	int agentPerLeader = Prm.NumAgents / Prm.NumLeaders;
+	//Player aura donc la valeur 1 ou 0 meme si on entre 2 dans le .ini
+	int player=0;
+	if (Prm.PlayerIsEnabled == 1) player = 1;
 
-//CREATION DU JOUEUR (PLAYER CONTROLLANT)
-	//determine a random starting position
-	Vector2D SpawnPos = Vector2D(cx / 2.0 + RandomClamped()*cx / 2.0,
-		cy / 2.0 + RandomClamped()*cy / 2.0);
+	// Chaques Leaders vont avoir le nombre d'agents diviser par le nombre de leaders (pas de chicane)
+	int agentPerLeader = Prm.NumAgents / (Prm.NumLeaders + player);
 
-	m_player = new Player(this,
-		SpawnPos,                 //initial position
-		RandFloat()*TwoPi,        //start rotation
-		Vector2D(0, 0),            //velocity
-		Prm.VehicleMass,          //mass
-		Prm.MaxSteeringForce,     //max force
-		Prm.MaxSpeed*0.85,             //max velocity
-		Prm.MaxTurnRatePerSecond, //max turn rate
-		Prm.VehicleScale*4.2,		//scale
-		2);							//color  (Le player est vert)
+//CREATION DU JOUEUR (PLAYER CONTROLLANT) Si Prm.PlayerOnOFF est a 1
+	if (player == 1)
+	{
+		//determine a random starting position
+		SpawnPos = Vector2D(cx / 2.0 + RandomClamped()*cx / 2.0,
+			cy / 2.0 + RandomClamped()*cy / 2.0);
 
-	//add it to the cell subdivision
-	m_pCellSpace->AddEntity(m_player);
+		m_player = new Player(this,
+			SpawnPos,                 //initial position
+			RandFloat()*TwoPi,        //start rotation
+			Vector2D(0, 0),            //velocity
+			Prm.VehicleMass,          //mass
+			Prm.MaxSteeringForce,     //max force
+			Prm.MaxSpeed*0.85,             //max velocity
+			Prm.MaxTurnRatePerSecond, //max turn rate
+			Prm.VehicleScale*4.2,		//scale
+			2);							//color  (Le player est vert)
 
-	m_Vehicles.push_back(m_player);
+		//add it to the cell subdivision
+		m_pCellSpace->AddEntity(m_player);
+
+		m_Vehicles.push_back(m_player);
+
+		newLeader = m_player;
+
+		// Je Cree mes followers, et chaque follower suivent son prochain
+		for (int i = 0; i < agentPerLeader; i++)
+		{
+			//determine a random starting position
+			SpawnPos = Vector2D(cx / 2.0 + RandomClamped()*cx / 2.0,
+				cy / 2.0 + RandomClamped()*cy / 2.0);
+
+
+			pFollower = new Follower(this,
+				SpawnPos,                 //initial position
+				RandFloat()*TwoPi,        //start rotation
+				Vector2D(0, 0),           //velocity
+				Prm.VehicleMass,          //mass
+				Prm.MaxSteeringForce,     //max force
+				Prm.MaxSpeed,             //max velocity
+				Prm.MaxTurnRatePerSecond, //max turn rate
+				Prm.VehicleScale * 2,	  //Scale
+				0,						  //Color (Les followers sont bleu)
+				newLeader);				  //Vehicule Followed
+
+										  //Offset (5, 5)
+			pFollower->Steering()->OffsetPursuitOn(newLeader, Vector2D(5, 5));
+
+			m_Vehicles.push_back(pFollower);
+
+			newLeader = pFollower;
+
+			//add it to the cell subdivision
+			m_pCellSpace->AddEntity(pFollower);
+		}
+	}
 
 
 //CREATION DU/DES LEADER(S) (WANDER)

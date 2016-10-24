@@ -25,6 +25,7 @@ private:
   {
 	NumLeaders				= GetNextParameterInt();
     NumAgents               = GetNextParameterInt();
+	PlayerIsEnabled			= GetNextParameterInt();
     NumObstacles            = GetNextParameterInt();
     MinObstacleRadius       = GetNextParameterFloat();
     MaxObstacleRadius       = GetNextParameterFloat();
@@ -81,6 +82,7 @@ public:
 
   int	NumLeaders;
   int	NumAgents;
+  int	PlayerIsEnabled;
   int	NumObstacles;
   double MinObstacleRadius;
   double MaxObstacleRadius;
