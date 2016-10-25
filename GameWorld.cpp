@@ -55,13 +55,48 @@ GameWorld::GameWorld(int cx, int cy):
 	Vehicle* newLeader;
 	Vehicle* pFollower;
 	Vector2D SpawnPos;
+	int agentPerLeader;
 
 	//Player aura donc la valeur 1 ou 0 meme si on entre 2 dans le .ini
 	int player=0;
 	if (Prm.PlayerIsEnabled == 1) player = 1;
 
-	// Chaques Leaders vont avoir le nombre d'agents diviser par le nombre de leaders (pas de chicane)
-	int agentPerLeader = Prm.NumAgents / (Prm.NumLeaders + player);
+	//Aucun Leader? FLOCKING!!
+	if (Prm.PlayerIsEnabled == 0 && Prm.NumLeaders == 0)
+	{
+		// Je Cree mes followers, Flocking on
+		for (int i = 0; i < Prm.NumAgents; i++)
+		{
+			//determine a random starting position
+			SpawnPos = Vector2D(cx / 2.0 + RandomClamped()*cx / 2.0,
+				cy / 2.0 + RandomClamped()*cy / 2.0);
+
+
+			pFollower = new Follower(this,
+				SpawnPos,                 //initial position
+				RandFloat()*TwoPi,        //start rotation
+				Vector2D(0, 0),           //velocity
+				Prm.VehicleMass,          //mass
+				Prm.MaxSteeringForce,     //max force
+				Prm.MaxSpeed,             //max velocity
+				Prm.MaxTurnRatePerSecond, //max turn rate
+				Prm.VehicleScale * 2,	  //Scale
+				0,						  //Color (Les followers sont bleu)
+				NULL);				  //Vehicule Followed
+
+			pFollower->Steering()->FlockingOn();
+
+			m_Vehicles.push_back(pFollower);
+
+			//add it to the cell subdivision
+			m_pCellSpace->AddEntity(pFollower);
+		}
+	}
+	else
+	{
+		// Chaques Leaders vont avoir le nombre d'agents diviser par le nombre de leaders (pas de chicane)
+		agentPerLeader = Prm.NumAgents / (Prm.NumLeaders + player);
+	}
 
 //CREATION DU JOUEUR (PLAYER CONTROLLANT) Si Prm.PlayerOnOFF est a 1
 	if (player == 1)
